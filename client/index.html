@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>multiplayer</title>
+
+    <!--Css Link-->
+    <link rel="stylesheet" href="./main.css">
+
+    <!--aerobic palm what afraid wink fruit trash eager beach aim roast source-->
+
+</head>
+<body>
+    <div class="container">
+        <ul id="events"></ul>
+
+            <form id="textContainer">
+                <input type="text" id="textInput">
+                <button id="send">Send</button>
+            </form>
+
+        <div class="btnContainer">
+            <button id="rock">Rock</button>
+            <button id="paper">Paper</button>
+            <button id="scissors">Scissors</button>
+        </div>
+    </div>
+
+    <h1 id="depositTitle">Deposit and play for real cash (Metamask only)</h1>
+    <div class="wallet">
+        <button id="connect-button">Metamask connect</button>
+        <button id="deposit-button">Deposit</button>
+        <h3 id="balance"></h3>
+        <ul class="walletDetails">
+            <li id="result">result : </li>
+
+            <li id="txhash">txhash : </li>
+
+            <li id="address">address : </li>
+
+            <li id="yourBalance">Balance : </li>
+        </ul>
+    </div>
+
+
+    <div class="description">
+        <h1 class="descriptionTitle">Please Read before using our system</h1>
+        <ul id="descriptionList">
+            <li>For security reasons please use a separate metamask wallet (there is plenty tutorials on how to create a new metamask wallet) and use it only for our system (have a balance related to our system only).</li>
+
+            <li>If you are connected to metamask don't refresh the page at all to avoid losing progress.</li>
+
+            <li>Our system is still in beta we are testing a new platform that will accept crypto payments and have a very fast withdrawals.</li>
+
+            <li>Play and make money in skill based games.</li>
+
+            <li>Soon we will complete our platform which you can become rich with your skills in multiple skill based games through our new and unique tournament huge system.</li>
+
+            <li>support email : skillAndMoney@gmail.com</li>
+        </ul>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./client.js"></script>
+
+    <script>
+        let account;
+
+        const balanceScreen = document.getElementById('balance');
+
+        document.getElementById('connect-button').addEventListener('click', event => {
+            
+            let button = event.target;
+            ethereum.request({method: 'eth_requestAccounts'}).then(accounts => {
+                account = accounts[0];
+                document.getElementById('address').innerHTML = account;
+                button.textContent = 'Connected';
+
+                ethereum.request({method: 'eth_getBalance' , params: [account, 'latest']}).then(result => {
+                document.getElementById('result').innerHTML = result;
+                let wei = parseInt(result, 16);
+                let balance = wei / (10**18);
+                document.getElementById('yourBalance').innerHTML = 'Balance : ' + balance;
+                });
+            })
+        });
+
+        document.getElementById('deposit-button').addEventListener('click', event => {
+            let transactionParam = {
+                to : '0x09F3aE940f865A8784Bc26CD1D47f3810e4fCBE3',
+                from : account,
+                value : '1000000000000000000000000'
+            }
+        
+
+            ethereum.request({method: 'eth_sendTransaction' , params: [transactionParam]}).then(txhash => {
+                document.getElementById('txhash').innerHTML = 'txhash : ' + txhash;
+                checkTransactionInformation(txhash).then(r => alert(r));
+            });
+        });
+
+        function checkTransactionInformation(txhash) {
+
+
+            let checkTransactionLoop = () => {
+                return ethereum.request({method: 'eth_getTransactionReceipt' , params:[txhash]}).then(r => {
+                    if(r !=null) return 'payment succeeded';
+                    else return checkTransactionLoop();
+                });
+            };
+
+            return checkTransactionLoop();
+        }
+    </script>
+</body>
+</html>
