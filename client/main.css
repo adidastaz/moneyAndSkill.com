@@ -154,7 +154,8 @@ body {
         width: 100%;
         height:200px;
         background: green;
-        color: #222;
+        color: #000;
+        font-weight: bold;
         font-size: 24px;
         display: flex;
         justify-content: center;
@@ -222,10 +223,11 @@ body {
     
     #donate {
         width: 100%;
-        height:200px;
+        height:350px;
         background: green;
-        color: #222;
-        font-size: 24px;
+        color: #000;
+        font-weight: bold;
+        font-size: 16px;
         display: flex;
         justify-content: center;
         align-items: center;
